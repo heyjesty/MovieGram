@@ -1,8 +1,21 @@
 from django.contrib import admin
 
-# Register your models here.
-from backend.models import productdb, categorydb
+from backend.models import Category, Language, Movie
 
 
-admin.site.register(productdb)
-admin.site.register(categorydb)
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "slug"]
+    prepopulated_fields = {"slug": ["name"]}
+
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+
+
+@admin.register(Movie)
+class MovieAdmin(admin.ModelAdmin):
+    list_display = ["title", "category", "language", "price", "created_at"]
+    list_filter = ["category", "language"]
+    search_fields = ["title"]

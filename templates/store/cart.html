@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Your cart{% endblock %}
+
+{% block content %}
+<div class="container page-section narrow">
+    <div class="page-head">
+        <div>
+            <h1>Your cart</h1>
+            <p class="muted">{{ items|length }} item{{ items|length|pluralize }}</p>
+        </div>
+    </div>
+
+    {% if items %}
+    <div class="checkout-layout">
+        <ul class="line-items">
+            {% for item in items %}
+            <li class="line-item">
+                <a href="{{ item.movie.get_absolute_url }}" class="line-thumb"><img src="{{ item.movie.thumbnail.url }}" alt="" width="64" height="96"></a>
+                <div class="line-info">
+                    <a href="{{ item.movie.get_absolute_url }}" class="line-title">{{ item.movie.title }}</a>
+                    <p class="muted small">{{ item.movie.language.name }} · {{ item.movie.category.name }}</p>
+                </div>
+                <div class="line-end">
+                    <span class="line-price">₹{{ item.movie.price|intcomma }}</span>
+                    <form method="post" action="{% url 'cart_remove' item.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="link-danger">Remove</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <aside class="summary">
+            <h2>Order summary</h2>
+            <div class="summary-row"><span>Subtotal</span><span>₹{{ total|intcomma }}</span></div>
+            <div class="summary-row"><span>Taxes &amp; fees</span><span>Included</span></div>
+            <div class="summary-row summary-total"><span>Total</span><span>₹{{ total|intcomma }}</span></div>
+            <a href="{% url 'checkout' %}" class="btn btn-primary btn-block">Proceed to checkout</a>
+            <a href="{% url 'movie_list' %}" class="btn btn-ghost btn-block">Continue browsing</a>
+        </aside>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <h2>Your cart is empty</h2>
+        <p>Find something great to watch tonight.</p>
+        <a href="{% url 'movie_list' %}" class="btn btn-primary">Browse titles</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

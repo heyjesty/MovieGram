@@ -1,0 +1,44 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Categories & languages{% endblock %}
+
+{% block dash_content %}
+<div class="two-col">
+    <section class="panel">
+        <div class="panel-head"><h1>Categories</h1></div>
+        <ul class="tag-list">
+            {% for c in categories %}
+            <li>
+                <span>{{ c.name }} <small class="muted">{{ c.movies.count }} title{{ c.movies.count|pluralize }}</small></span>
+                <form method="post" action="{% url 'taxonomy_delete' 'category' c.pk %}" data-confirm="Delete category “{{ c.name }}”?">
+                    {% csrf_token %}<button type="submit" class="link-danger">Delete</button>
+                </form>
+            </li>
+            {% empty %}<li class="muted">No categories yet.</li>{% endfor %}
+        </ul>
+        <form method="post" class="inline-form" novalidate>
+            {% csrf_token %}
+            {% include "_field.html" with field=category_form.name %}
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <div class="panel-head"><h1>Languages</h1></div>
+        <ul class="tag-list">
+            {% for lang in languages %}
+            <li>
+                <span>{{ lang.name }} <small class="muted">{{ lang.movies.count }} title{{ lang.movies.count|pluralize }}</small></span>
+                <form method="post" action="{% url 'taxonomy_delete' 'language' lang.pk %}" data-confirm="Delete language “{{ lang.name }}”?">
+                    {% csrf_token %}<button type="submit" class="link-danger">Delete</button>
+                </form>
+            </li>
+            {% empty %}<li class="muted">No languages yet.</li>{% endfor %}
+        </ul>
+        <form method="post" class="inline-form" novalidate>
+            {% csrf_token %}
+            {% include "_field.html" with field=language_form.name %}
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

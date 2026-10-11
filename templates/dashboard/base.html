@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block body_class %}dash-body{% endblock %}
+
+{% block header %}
+<header class="dash-topbar">
+    <a href="{% url 'dashboard' %}" class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.6-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14Z"/></svg></span>
+        <span class="brand-text">Movie<span>Gram</span></span> <small class="dash-tag">Admin</small>
+    </a>
+    {% if user.is_staff %}
+    <nav class="dash-nav" aria-label="Dashboard">
+        {% with name=request.resolver_match.url_name %}
+        <a href="{% url 'dashboard' %}" class="{% if name == 'dashboard' or name == 'movie_edit' %}active{% endif %}">Titles</a>
+        <a href="{% url 'movie_create' %}" class="{% if name == 'movie_create' %}active{% endif %}">Add title</a>
+        <a href="{% url 'taxonomy' %}" class="{% if name == 'taxonomy' %}active{% endif %}">Categories &amp; languages</a>
+        <a href="{% url 'dashboard_orders' %}" class="{% if name == 'dashboard_orders' %}active{% endif %}">Orders</a>
+        {% endwith %}
+    </nav>
+    <div class="dash-user">
+        <a href="{% url 'home' %}" class="btn btn-ghost btn-sm">View site</a>
+        <form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="btn btn-ghost btn-sm" type="submit">Sign out</button></form>
+    </div>
+    {% endif %}
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="dash-main">
+    {% block dash_content %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

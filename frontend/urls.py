@@ -3,18 +3,16 @@ from django.urls import path
 from frontend import views
 
 urlpatterns = [
-    path("homepage/",views.homepage,name="homepage"),
-    path("singlemov/<int:proid>/",views.singlemov,name="singlemov"),
-    path("registermov/",views.registermov,name="registermov"),
-    path("loginmov/",views.loginmov,name="loginmov"),
-    path("registersave/",views.registersave,name="registersave"),
-    path("userlogin/",views.userlogin,name="userlogin"),
-    path("logout/",views.logout,name="logout"),
-    path("cartsave/",views.cartsave,name="cartsave"),
-    path("cartdisplay/",views.cartdisplay,name="cartdisplay"),
-    path("cartdelete/<int:dataid>/",views.cartdelete,name="cartdelete"),
-    path('pro/<catname>/', views.pro, name="pro"),
-    path('checkout/', views.checkout, name="checkout"),
-    path('checkoutsave/', views.checkoutsave, name="checkoutsave"),
-
+    path("", views.home, name="home"),
+    path("browse/", views.movie_list, name="movie_list"),
+    path("category/<slug:slug>/", views.movie_list, name="category"),
+    path("movie/<int:pk>/", views.movie_detail, name="movie_detail"),
+    path("cart/", views.cart, name="cart"),
+    path("cart/add/<int:pk>/", views.cart_add, name="cart_add"),
+    path("cart/remove/<int:pk>/", views.cart_remove, name="cart_remove"),
+    path("checkout/", views.checkout, name="checkout"),
+    path("orders/", views.orders, name="orders"),
+    path("login/", views.login_view, name="login"),
+    path("register/", views.register, name="register"),
+    path("logout/", views.logout_view, name="logout"),
 ]

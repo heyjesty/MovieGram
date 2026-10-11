@@ -1,0 +1,58 @@
+{% extends "dashboard/base.html" %}
+{% load humanize %}
+{% block title %}Titles{% endblock %}
+
+{% block dash_content %}
+<div class="stats">
+    <div class="stat"><span>Titles</span><strong>{{ stats.movies }}</strong></div>
+    <div class="stat"><span>Orders</span><strong>{{ stats.orders }}</strong></div>
+    <div class="stat"><span>Revenue</span><strong>₹{{ stats.revenue|intcomma }}</strong></div>
+    <div class="stat"><span>Customers</span><strong>{{ stats.customers }}</strong></div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h1>Titles</h1>
+        <div class="panel-actions">
+            <form method="get" class="search search-inline" role="search">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input type="search" name="q" value="{{ query }}" placeholder="Search titles" aria-label="Search titles">
+            </form>
+            <a href="{% url 'movie_create' %}" class="btn btn-primary btn-sm">+ Add title</a>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+                <tr><th>Title</th><th>Category</th><th>Language</th><th class="num">Price</th><th class="actions-col"><span class="sr-only">Actions</span></th></tr>
+            </thead>
+            <tbody>
+            {% for movie in movies %}
+                <tr>
+                    <td>
+                        <div class="table-title">
+                            <img src="{{ movie.thumbnail.url }}" alt="" width="40" height="60">
+                            <a href="{{ movie.get_absolute_url }}">{{ movie.title }}</a>
+                        </div>
+                    </td>
+                    <td>{{ movie.category.name }}</td>
+                    <td>{{ movie.language.name }}</td>
+                    <td class="num">₹{{ movie.price|intcomma }}</td>
+                    <td class="actions-col">
+                        <div class="row-actions">
+                            <a href="{% url 'movie_edit' movie.pk %}" class="btn btn-ghost btn-sm">Edit</a>
+                            <form method="post" action="{% url 'movie_delete' movie.pk %}" data-confirm="Delete “{{ movie.title }}”? This cannot be undone.">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="empty">No titles found.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

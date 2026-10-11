@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}My orders{% endblock %}
+
+{% block content %}
+<div class="container page-section narrow">
+    <div class="page-head">
+        <div>
+            <h1>My orders</h1>
+            <p class="muted">Everything you've bought on MovieGram.</p>
+        </div>
+    </div>
+    {% for order in orders %}
+    <article class="panel order">
+        <header class="order-head">
+            <div>
+                <h2>Order {{ order.reference }}</h2>
+                <p class="muted small">{{ order.created_at|date:"j M Y, g:i A" }}</p>
+            </div>
+            <div class="order-total">₹{{ order.total|intcomma }}</div>
+        </header>
+        <ul class="order-items">
+            {% for item in order.items.all %}
+            <li>
+                {% if item.movie %}
+                <a href="{{ item.movie.get_absolute_url }}" class="order-item">
+                    <img src="{{ item.movie.thumbnail.url }}" alt="" width="48" height="72">
+                    <span>{{ item.title }}</span>
+                </a>
+                {% else %}
+                <span class="order-item"><span>{{ item.title }}</span></span>
+                {% endif %}
+                <span class="muted">₹{{ item.price|intcomma }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </article>
+    {% empty %}
+    <div class="empty-state">
+        <h2>No orders yet</h2>
+        <p>Titles you buy will show up here.</p>
+        <a href="{% url 'movie_list' %}" class="btn btn-primary">Start browsing</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

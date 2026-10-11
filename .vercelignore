@@ -1,0 +1,12 @@
+# Legacy template assets that the redesigned site no longer uses
+frontend/static
+backend/static
+frontend/templates
+backend/templates
+# Local-only files
+*.sqlite3
+.idea
+.venv
+venv
+__pycache__
+staticfiles

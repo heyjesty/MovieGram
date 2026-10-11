@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Page not found{% endblock %}
+
+{% block content %}
+<div class="container not-found">
+    <div class="code">404</div>
+    <h1>This scene doesn't exist</h1>
+    <p class="muted">The page you're looking for was moved, removed or never existed.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Back to home</a>
+</div>
+{% endblock %}

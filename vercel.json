@@ -1,0 +1,8 @@
+{
+  "builds": [
+    { "src": "Moviegram/wsgi.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "Moviegram/wsgi.py" }
+  ]
+}

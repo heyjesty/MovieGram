@@ -1,0 +1,6 @@
+<div class="field{% if field.errors %} has-error{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    {% if field.errors %}<p class="field-error">{{ field.errors|join:" " }}</p>
+    {% elif field.help_text and show_help %}<div class="field-help">{{ field.help_text|safe }}</div>{% endif %}
+</div>

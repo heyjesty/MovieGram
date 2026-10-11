@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+<div class="auth">
+    <form method="post" class="panel auth-card form-stack" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
+        <h1>Welcome back</h1>
+        <p class="muted">Sign in to buy titles and see your orders.</p>
+        {% if form.non_field_errors %}<div class="alert">Incorrect username or password.</div>{% endif %}
+        {% include "_field.html" with field=form.username %}
+        {% include "_field.html" with field=form.password %}
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Sign in</button>
+        <p class="muted center">New to MovieGram? <a href="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Create an account</a></p>
+    </form>
+</div>
+{% endblock %}

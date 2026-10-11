@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container page-section narrow">
+    <div class="page-head">
+        <div>
+            <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{% url 'cart' %}">Cart</a><span>/</span>Checkout</nav>
+            <h1>Checkout</h1>
+        </div>
+    </div>
+    <div class="checkout-layout">
+        <form method="post" class="panel form-stack" novalidate>
+            {% csrf_token %}
+            <h2>Billing details</h2>
+            {% if form.non_field_errors %}<div class="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+            <div class="form-grid">
+                {% include "_field.html" with field=form.full_name %}
+                {% include "_field.html" with field=form.email %}
+            </div>
+            {% include "_field.html" with field=form.phone %}
+            {% include "_field.html" with field=form.address %}
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Pay ₹{{ total|intcomma }}</button>
+            <p class="muted small center">This is a demo store. No real payment is taken.</p>
+        </form>
+        <aside class="summary">
+            <h2>Your order</h2>
+            {% for item in items %}
+            <div class="summary-row"><span>{{ item.movie.title }}</span><span>₹{{ item.movie.price|intcomma }}</span></div>
+            {% endfor %}
+            <div class="summary-row summary-total"><span>Total</span><span>₹{{ total|intcomma }}</span></div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

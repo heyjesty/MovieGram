@@ -1,0 +1,12 @@
+{% load humanize %}<article class="card">
+    <a href="{{ movie.get_absolute_url }}" class="card-link">
+        <div class="poster">
+            <img src="{{ movie.thumbnail.url }}" alt="{{ movie.title }} poster" loading="lazy" width="250" height="375">
+            <span class="price-tag">₹{{ movie.price|intcomma }}</span>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{{ movie.title }}</h3>
+            <p class="card-meta">{{ movie.language.name }} · {{ movie.category.name }}</p>
+        </div>
+    </a>
+</article>

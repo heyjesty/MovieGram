@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ movie.title }}{% endblock %}
+{% block meta_description %}{{ movie.description|default:movie.title|truncatechars:155 }}{% endblock %}
+
+{% block content %}
+<section class="detail">
+    <div class="detail-backdrop" style="background-image: url('{{ movie.thumbnail.url }}')" aria-hidden="true"></div>
+    <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span>
+            <a href="{{ movie.category.get_absolute_url }}">{{ movie.category.name }}</a><span>/</span>
+            {{ movie.title }}
+        </nav>
+        <div class="detail-grid">
+            <div class="detail-poster">
+                <img src="{{ movie.thumbnail.url }}" alt="{{ movie.title }} poster" width="250" height="375">
+            </div>
+            <div class="detail-info">
+                <div class="chips">
+                    <a class="chip" href="{{ movie.category.get_absolute_url }}">{{ movie.category.name }}</a>
+                    <a class="chip" href="{% url 'movie_list' %}?language={{ movie.language.name|urlencode }}">{{ movie.language.name }}</a>
+                    <span class="chip">HD</span>
+                </div>
+                <h1>{{ movie.title }}</h1>
+                {% if movie.description %}<p class="lead">{{ movie.description }}</p>{% endif %}
+
+                <div class="buy-box">
+                    <div>
+                        <span class="muted small">Price</span>
+                        <div class="price">₹{{ movie.price|intcomma }}</div>
+                    </div>
+                    <div class="buy-actions">
+                        {% if owned %}
+                            <span class="status status-success">✓ In your library</span>
+                            <a href="{% url 'orders' %}" class="btn btn-ghost">View orders</a>
+                        {% elif in_cart %}
+                            <a href="{% url 'cart' %}" class="btn btn-primary">Go to cart</a>
+                            <a href="{% url 'checkout' %}" class="btn btn-ghost">Checkout</a>
+                        {% elif user.is_authenticated %}
+                            <form method="post" action="{% url 'cart_add' movie.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <button type="submit" class="btn btn-primary">Add to cart</button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Sign in to buy</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <dl class="facts">
+                    <div><dt>Type</dt><dd>{{ movie.category.name }}</dd></div>
+                    <div><dt>Language</dt><dd>{{ movie.language.name }}</dd></div>
+                    <div><dt>Quality</dt><dd>Full HD</dd></div>
+                    <div><dt>Access</dt><dd>Lifetime</dd></div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if related %}
+<div class="container page-section">
+    <section class="shelf">
+        <div class="section-head">
+            <h2>More {{ movie.category.name }}</h2>
+            <a href="{{ movie.category.get_absolute_url }}" class="link-arrow">View all</a>
+        </div>
+        <div class="row-scroll">
+            {% for movie in related %}{% include "store/_movie_card.html" %}{% endfor %}
+        </div>
+    </section>
+</div>
+{% endif %}
+{% endblock %}

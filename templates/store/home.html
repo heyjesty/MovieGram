@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Movies & TV series online{% endblock %}
+
+{% block content %}
+<section class="hero" data-slider aria-roledescription="carousel" aria-label="Featured titles">
+    {% for slide in slides %}
+    <div class="hero-slide{% if forloop.first %} is-active{% endif %}" data-slide aria-roledescription="slide" aria-label="{{ forloop.counter }} of {{ slides|length }}">
+        <img class="hero-bg" src="{% static slide.image %}" alt="" {% if not forloop.first %}loading="lazy"{% endif %}>
+        <div class="container hero-content">
+            <span class="eyebrow">{{ slide.label }}</span>
+            <h1>{{ slide.title }}</h1>
+            <p>{{ slide.text }}</p>
+            <div class="hero-actions">
+                <a href="#catalogue" class="btn btn-primary btn-lg">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.6-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14Z"/></svg>
+                    Explore titles
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'orders' %}" class="btn btn-glass btn-lg">My orders</a>
+                {% else %}
+                <a href="{% url 'register' %}" class="btn btn-glass btn-lg">Join free</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="hero-dots container" role="tablist">
+        {% for slide in slides %}
+        <button type="button" class="dot{% if forloop.first %} is-active{% endif %}" data-dot="{{ forloop.counter0 }}" aria-label="Show {{ slide.title }}"></button>
+        {% endfor %}
+    </div>
+</section>
+
+<div id="catalogue" class="container page-section">
+    <section class="shelf">
+        <div class="section-head">
+            <h2>New arrivals</h2>
+            <a href="{% url 'movie_list' %}" class="link-arrow">View all</a>
+        </div>
+        <div class="grid">
+            {% for movie in latest %}{% include "store/_movie_card.html" %}{% empty %}
+            <p class="empty">No titles yet. Check back soon.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% for section in sections %}
+    <section class="shelf">
+        <div class="section-head">
+            <h2>{{ section.category.name }}</h2>
+            <a href="{{ section.category.get_absolute_url }}" class="link-arrow">View all</a>
+        </div>
+        <div class="row-scroll">
+            {% for movie in section.movies %}{% include "store/_movie_card.html" %}{% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+
+    <section class="features">
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <h3>Watch anywhere</h3>
+            <p>Stream on your phone, tablet, laptop or TV.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>Secure checkout</h3>
+            <p>Your account and orders are protected.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <h3>Buy once, keep forever</h3>
+            <p>No subscriptions. Pay only for what you love.</p>
+        </div>
+    </section>
+</div>
+{% endblock %}
